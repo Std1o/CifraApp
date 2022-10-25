@@ -2,6 +2,7 @@ package com.stdio.cifraapp.data
 
 import com.stdio.cifraapp.domain.DataState
 import retrofit2.Response
+import student.testing.system.common.Utils.encodeErrorCode
 
 open class BaseRepository {
 
@@ -15,7 +16,7 @@ open class BaseRepository {
                 }
                 return DataState.Empty(response.code())
             }
-            val errorMessage = response.message()
+            val errorMessage = encodeErrorCode(response.errorBody())
             return error(errorMessage, response.code())
         } catch (e: Exception) {
             return error(e.message ?: " ", -1)

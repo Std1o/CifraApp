@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.stdio.cifraapp.R
+import com.stdio.cifraapp.common.showSnackbar
 import com.stdio.cifraapp.common.subscribeInUI
 import com.stdio.cifraapp.common.viewBinding
 import com.stdio.cifraapp.databinding.FragmentBankListBinding
@@ -22,11 +23,9 @@ class BankListFragment : Fragment(R.layout.fragment_bank_list) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        adapter = BanksAdapter(object : BanksAdapter.ClickListener {
-            override fun onClick(bank: Bank) {
-                // TODO
-            }
-        })
+        adapter = BanksAdapter {
+            showSnackbar(getString(R.string.connect_bank_placeholder, it))
+        }
         binding.rv.layoutManager = LinearLayoutManager(requireContext())
         binding.rv.adapter = adapter
         subscribeObservers()

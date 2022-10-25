@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.stdio.cifraapp.databinding.ItemBankBinding
 import com.stdio.cifraapp.domain.models.Bank
 
-class BanksAdapter(private val listener: ClickListener) :
+class BanksAdapter(private val listener: (String) -> Unit) :
     RecyclerView.Adapter<BanksAdapter.CourseViewHolder>() {
 
     private var dataList = emptyList<Bank>()
@@ -32,6 +32,9 @@ class BanksAdapter(private val listener: ClickListener) :
         with(holder) {
             val bank = dataList[position]
             binding.tvName.text = bank.bankName
+            binding.btnConnect.setOnClickListener {
+                listener.invoke(bank.bank)
+            }
         }
     }
 
