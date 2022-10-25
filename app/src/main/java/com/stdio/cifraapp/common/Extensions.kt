@@ -1,24 +1,13 @@
 package com.stdio.cifraapp.common
 
-import android.annotation.SuppressLint
-import android.content.DialogInterface
-import android.util.Patterns
 import android.view.View
-import android.widget.EditText
 import android.widget.ProgressBar
 import androidx.annotation.StringRes
-import androidx.core.widget.doOnTextChanged
-import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.*
 import androidx.viewbinding.ViewBinding
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
-import com.google.android.material.textfield.TextInputLayout
 import kotlinx.coroutines.flow.*
-import com.stdio.cifraapp.R
-import java.text.SimpleDateFormat
-import java.util.*
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 import kotlinx.coroutines.launch
@@ -40,18 +29,6 @@ fun Fragment.showSnackbar(message: String, duration: Int = Snackbar.LENGTH_SHORT
 
 fun Fragment.showSnackbar(@StringRes message: Int, duration: Int = Snackbar.LENGTH_SHORT) {
     requireActivity().window?.let {
-        Snackbar.make(it.decorView, message, duration).show()
-    }
-}
-
-fun DialogFragment.showSnackbar(@StringRes message: Int, duration: Int = Snackbar.LENGTH_SHORT) {
-    requireDialog().window?.let {
-        Snackbar.make(it.decorView, message, duration).show()
-    }
-}
-
-fun DialogFragment.showSnackbar(message: String, duration: Int = Snackbar.LENGTH_SHORT) {
-    requireDialog().window?.let {
         Snackbar.make(it.decorView, message, duration).show()
     }
 }
@@ -96,21 +73,4 @@ fun <T> StateFlow<DataState<T>>.subscribeInUI(
             fragment.showSnackbar(it.exception)
         }
     }.launchWhenStartedCollect(fragment.lifecycleScope)
-}
-
-fun <T> StateFlow<DataState<T>>.subscribeInUI(
-    dialogFragment: DialogFragment,
-    progressBar: ProgressBar,
-    listener: (T) -> Unit
-) {
-    this@subscribeInUI.onEach {
-        progressBar.showIf(it is DataState.Loading)
-        if (it is DataState.Success) {
-            listener.invoke(it.data)
-        } else if (it is DataState.ValidationError) {
-            dialogFragment.showSnackbar(it.messageResId)
-        } else if (it is DataState.Error) {
-            dialogFragment.showSnackbar(it.exception)
-        }
-    }.launchWhenStartedCollect(dialogFragment.lifecycleScope)
 }
